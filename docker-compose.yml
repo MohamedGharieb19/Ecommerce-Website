@@ -1,0 +1,36 @@
+version: '3'
+services:
+  inventory:
+    build:
+      dockerfile: Dockerfile
+      context: ./inventory
+    container_name: inventory
+    restart: always
+    volumes:
+      - ./:/src/inventory
+      - /src/inventory/node_modules
+  
+  accounts:
+    build:
+      dockerfile: Dockerfile
+      context: ./accounts
+    container_name: accounts
+    restart: always
+    volumes:
+      - ./:/src/accounts
+      - /src/accounts/node_modules
+
+  gateway:
+    build:
+      dockerfile: Dockerfile
+      context: ./gateway
+    container_name: gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "inventory"
+      - "accounts"
+    restart: always
+    volumes:
+      - ./:/src/gateway
+      - /src/gateway/node_modules
